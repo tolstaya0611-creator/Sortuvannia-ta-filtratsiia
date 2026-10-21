@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тест: Сортування та фільтрація в Excel</title>
+<style>
+  :root { --green:#217346; --light:#eaf4ee; --border:#d5dfd8; --ink:#1e2a23; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; background:#f4f7f5; color:var(--ink); line-height:1.5; }
+  .wrap { max-width:900px; margin:28px auto; padding:0 16px 36px; }
+  header { background:linear-gradient(135deg,#185c37,#2e8b57); color:#fff; padding:28px; border-radius:16px; box-shadow:0 8px 24px #183d2820; }
+  h1 { margin:0 0 8px; font-size:clamp(24px,4vw,34px); }
+  header p { margin:0; opacity:.94; }
+  .meta { display:flex; gap:12px; flex-wrap:wrap; margin-top:18px; }
+  .pill { background:#ffffff20; border:1px solid #ffffff50; border-radius:999px; padding:6px 12px; font-size:14px; }
+  .progress-box { margin:18px 0; background:#fff; padding:14px 16px; border:1px solid var(--border); border-radius:12px; }
+  .progress-line { height:9px; background:#e7eee9; border-radius:9px; overflow:hidden; margin-top:8px; }
+  #progress { width:0; height:100%; background:var(--green); transition:width .2s; }
+  .question { background:#fff; border:1px solid var(--border); border-radius:14px; padding:20px; margin:16px 0; box-shadow:0 3px 10px #173e2910; }
+  .qhead { display:flex; align-items:flex-start; gap:12px; }
+  .num { flex:0 0 36px; height:36px; display:grid; place-items:center; background:var(--light); color:var(--green); border-radius:10px; font-weight:700; }
+  h2 { font-size:18px; margin:3px 0 14px; }
+  .hint { font-size:13px; color:#53665a; margin:0 0 12px 48px; }
+  .visual { margin:12px 0 16px 48px; overflow-x:auto; }
+  table.sheet { border-collapse:collapse; font-size:14px; min-width:280px; background:white; }
+  .sheet th,.sheet td { border:1px solid #cbd8cf; padding:7px 12px; text-align:left; }
+  .sheet th { background:#e5f1e8; color:#174b2d; }
+  .sheet .rownum { background:#f0f3f1; color:#627067; text-align:center; }
+  .visual-note { color:#53665a; font-size:13px; margin-top:6px; }
+  .options { display:grid; gap:9px; margin-left:48px; }
+  .option { display:flex; align-items:flex-start; gap:10px; padding:11px 12px; border:1px solid #dce5df; border-radius:10px; cursor:pointer; transition:background .15s,border .15s; }
+  .option:hover { background:#f6faf7; border-color:#91b7a0; }
+  .option input { margin-top:4px; accent-color:var(--green); }
+  .option.correct { border-color:#299653; background:#eaf8ee; }
+  .option.wrong { border-color:#c44a4a; background:#fff0f0; }
+  .feedback { margin:12px 0 0 48px; padding:10px 12px; border-radius:8px; font-size:14px; }
+  .feedback.good { background:#eaf8ee; color:#145a2c; }
+  .feedback.bad { background:#fff0f0; color:#8d2020; }
+  .actions { display:flex; gap:10px; flex-wrap:wrap; margin:24px 0; }
+  button { border:0; border-radius:10px; padding:13px 18px; font-weight:700; font-size:15px; cursor:pointer; }
+  #checkBtn { background:var(--green); color:#fff; }
+  #resetBtn { background:#e5ebe7; color:#24362a; }
+  button:disabled { opacity:.55; cursor:not-allowed; }
+  #result { display:none; background:#fff; border:2px solid var(--green); border-radius:16px; padding:24px; margin-top:22px; text-align:center; }
+  #percent { font-size:48px; font-weight:800; color:var(--green); margin:8px 0; }
+  #result h2 { font-size:24px; margin:0; }
+  .result-stats { display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-top:12px; }
+  .stat { background:#f1f6f2; padding:10px 14px; border-radius:10px; }
+  .small { color:#5c6a61; font-size:13px; }
+  @media(max-width:600px) {
+    .question { padding:15px; }
+    .hint,.visual,.options,.feedback { margin-left:0; }
+    header { padding:22px; }
+    .qhead { gap:9px; }
+    h2 { font-size:17px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Тест: Сортування та фільтрація в Excel</h1>
+    <p>Перевір свої знання. Уважно прочитай запитання та вибери відповідь.</p>
+    <div class="meta">
+      <span class="pill">10 запитань</span>
+      <span class="pill">Тема: Excel</span>
+      <span class="pill">Є запитання з кількома відповідями</span>
+    </div>
+  </header>
+
+  <div class="progress-box">
+    <strong>Виконано: <span id="answered">0</span> із 10</strong>
+    <div class="progress-line"><div id="progress"></div></div>
+  </div>
+
+  <form id="quiz">
+    <section class="question" data-correct="A" data-multi="false">
+      <div class="qhead"><div class="num">1</div><h2>Для чого в Excel використовують сортування даних?</h2></div>
+      <div class="visual">
+        <table class="sheet"><tr><th>Прізвище</th><th>Оцінка</th></tr><tr><td>Бондар</td><td>10</td></tr><tr><td>Іваненко</td><td>8</td></tr><tr><td>Коваль</td><td>12</td></tr></table>
+        <div class="visual-note">Сортування змінює порядок розташування записів.</div>
+      </div>
+      <div class="options">
+        <label class="option"><input type="radio" name="q1" value="A"> Для впорядкування даних за певною ознакою</label>
+        <label class="option"><input type="radio" name="q1" value="B"> Для приховування рядків за умовою</label>
+        <label class="option"><input type="radio" name="q1" value="C"> Для видалення повторюваних записів</label>
+        <label class="option"><input type="radio" name="q1" value="D"> Для обчислення суми всіх значень</label>
+      </div><div class="feedback" hidden></div>
+    </section>
+
+    <section class="question" data-correct="B" data-multi="false">
+      <div class="qhead"><div class="num">2</div><h2>У стовпці «Оцінка» записані числа 8, 12, 5, 10. Який порядок отримаємо після сортування від найменшого до найбільшого?</h2></div>
+      <div class="visual"><table class="sheet"><tr><th>Оцінка</th></tr><tr><td>8</td></tr><tr><td>12</td></tr><tr><td>5</td></tr><tr><td>10</td></tr></table></div>
+      <div class="options">
+        <label class="option"><input type="radio" name="q2" value="A"> 12, 10, 8, 5</label>
+        <label class="option"><input type="radio" name="q2" value="B"> 5, 8, 10, 12</label>
+        <label class="option"><input type="radio" name="q2" value="C"> 8, 5, 12, 10</label>
+        <label class="option"><input type="radio" name="q2" value="D"> 10, 12, 5, 8</label>
+      </div><div class="feedback" hidden></div>
+    </section>
+
+    <section class="question" data-correct="C" data-multi="false">
+      <div class="qhead"><div class="num">3</div><h2>Яку команду потрібно вибрати, щоб розташувати прізвища від Я до А?</h2></div>
+      <div class="visual"><table class="sheet"><tr><th>Прізвище</th><th>Команда</th></tr><tr><td>Яремчук</td><td>Я → А</td></tr><tr><td>Шевченко</td><td>А → Я</td></tr></table></div>
+      <div class="options">
+        <label class="option"><input type="radio" name="q3" value="A"> Сортування від А до Я</label>
+        <label class="option"><input type="radio" name="q3" value="B"> Фільтр за кольором</label>
+        <label class="option"><input type="radio" name="q3" value="C"> Сортування від Я до А</label>
+        <label class="option"><input type="radio" name="q3" value="D"> Текстові фільтри</label>
+      </div><div class="feedback" hidden></div>
+    </section>
+
+    <section class="question" data-correct="B" data-multi="false">
+      <div class="qhead"><div class="num">4</div><h2>Що відбувається після застосування фільтра до таблиці Excel?</h2></div>
+      <div class="visual"><table class="sheet"><tr><th>Місто ▾</th><th>Учень</th></tr><tr><td>Львів</td><td>Олена</td></tr><tr><td>Львів</td><td>Максим</td></tr><tr><td colspan="2" style="color:#68766d">Інші рядки приховано фільтром</td></tr></table></div>
+      <div class="options">
+        <label class="option"><input type="radio" name="q4" value="A"> Усі рядки назавжди видаляються, крім потрібних</label>
+        <label class="option"><input type="radio" name="q4" value="B"> Рядки, що не відповідають умовам, тимчасово приховуються</label>
+        <label class="option"><input type="radio" name="q4" value="C"> Усі значення автоматично сортуються за зростанням</label>
+        <label class="option"><input type="radio" name="q4" value="D"> Усі клітинки перетворюються на формули</label>
+      </div><div class="feedback" hidden></div>
+    </section>
+
+    <section class="question" data-correct="A,B,C" data-multi="true">
+      <div class="qhead"><div class="num">5</div><h2>Які умови можна використовувати для фільтрації таблиці Excel? Обери всі правильні варіанти.</h2></div>
+      <div class="visual"><table class="sheet"><tr><th>Фільтр</th><th>Приклад умови</th></tr><tr><td>Числовий</td><td>Більше за 100</td></tr><tr><td>Текстовий</td><td>Містить слово</td></tr><tr><td>За кольором</td><td>Колір клітинки</td></tr></table></div>
+      <div class="options">
+        <label class="option"><input type="checkbox" name="q5" value="A"> Показати лише числа, більші за 100</label>
+        <label class="option"><input type="checkbox" name="q5" value="B"> Показати лише записи з певним текстом</label>
+        <label class="option"><input type="checkbox" name="q5" value="C"> Показати записи за певним кольором клітинки</label>
+        <label class="option"><input type="checkbox" name="q5" value="D"> Автоматично змінити всі формули на числа</label>
+      </div><div class="feedback" hidden></div>
+    </section>
+
+    <section class="question" data-correct="true" data-multi="false">
+      <div class="qhead"><div class="num">6</div><h2>Якщо відсортувати лише один стовпець таблиці, не включивши решту пов'язаних даних, відповідність між значеннями різних стовпців може порушитися.</h2></div>
+      <div class="options">
+        <label class="option"><input type="radio" name="q6" value="true"> Правда</label>
+        <label class="option"><input type="radio" name="q6" value="false"> Неправда</label>
+      </div><div class="feedback" hidden></div>
+    </section>
+
+    <section class="question" data-correct="B" data-multi="false">
+      <div class="qhead"><div class="num">7</div><h2>У таблиці є стовпець «Місто». Потрібно показати тільки записи зі Львова. Яку дію слід виконати?</h2></div>
+      <div class="visual"><table class="sheet"><tr><th>Місто ▾</th><th>Ім'я</th></tr><tr><td>Київ</td><td>Ірина</td></tr><tr><td>Львів</td><td>Олег</td></tr><tr><td>Одеса</td><td>Марія</td></tr></table></div>
+      <div class="options">
+        <label class="option"><input type="radio" name="q7" value="A"> Відсортувати міста від А до Я</label>
+        <label class="option"><input type="radio" name="q7" value="B"> Застосувати фільтр і вибрати «Львів»</label>
+        <label class="option"><input type="radio" name="q7" value="C"> Видалити всі інші міста вручну</label>
+        <label class="option"><input type="radio" name="q7" value="D"> Застосувати числовий фільтр</label>
+      </div><div class="feedback" hidden></div>
+    </section>
+
+    <section class="question" data-correct="true" data-multi="false">
+      <div class="qhead"><div class="num">8</div><h2>Після очищення фільтра приховані ним рядки знову можуть відображатися в таблиці.</h2></div>
+      <div class="options">
+        <label class="option"><input type="radio" name="q8" value="true"> Правда</label>
+        <label class="option"><input type="radio" name="q8" value="false"> Неправда</label>
+      </div><div class="feedback" hidden></div>
+    </section>
+
+    <section class="question" data-correct="C" data-multi="false">
+      <div class="qhead"><div class="num">9</div><h2>У стовпці «Дата» потрібно розташувати найновіші дати на початку списку. Який спосіб сортування обрати?</h2></div>
+      <div class="visual"><table class="sheet"><tr><th>Дата</th></tr><tr><td>21.10.2026</td></tr><tr><td>03.04.2025</td></tr><tr><td>15.06.2026</td></tr></table></div>
+      <div class="options">
+        <label class="option"><input type="radio" name="q9" value="A"> Від найстарішої дати до найновішої</label>
+        <label class="option"><input type="radio" name="q9" value="B"> За алфавітом назв місяців</label>
+        <label class="option"><input type="radio" name="q9" value="C"> Від найновішої дати до найстарішої</label>
+        <label class="option"><input type="radio" name="q9" value="D"> За кольором шрифту</label>
+      </div><div class="feedback" hidden></div>
+    </section>
+
+    <section class="question" data-correct="A" data-multi="false">
+      <div class="qhead"><div class="num">10</div><h2>У таблиці продажів потрібно залишити записи, де сума більша за 500, а потім розташувати їх від найбільшої суми до найменшої. Яка послідовність дій правильна?</h2></div>
+      <div class="visual"><table class="sheet"><tr><th>Продаж</th><th>Сума</th></tr><tr><td>А</td><td>750</td></tr><tr><td>Б</td><td>320</td></tr><tr><td>В</td><td>1200</td></tr><tr><td>Г</td><td>540</td></tr></table></div>
+      <div class="options">
+        <label class="option"><input type="radio" name="q10" value="A"> Спочатку відфільтрувати суми понад 500, потім відсортувати за спаданням</label>
+        <label class="option"><input type="radio" name="q10" value="B"> Відсортувати за зростанням і видалити суми до 500</label>
+        <label class="option"><input type="radio" name="q10" value="C"> Застосувати лише фільтр за кольором</label>
+        <label class="option"><input type="radio" name="q10" value="D"> Змінити формат усіх сум на грошовий</label>
+      </div><div class="feedback" hidden></div>
+    </section>
+
+    <div class="actions">
+      <button type="button" id="checkBtn">Перевірити відповіді</button>
+      <button type="button" id="resetBtn">Пройти тест ще раз</button>
+    </div>
+  </form>
+
+  <section id="result" aria-live="polite">
+    <h2>Результат тесту</h2>
+    <div id="percent">0%</div>
+    <p id="resultText"></p>
+    <div class="result-stats">
+      <div class="stat"><strong id="correctCount">0</strong><br>правильних відповідей</div>
+      <div class="stat"><strong>10</strong><br>усього запитань</div>
+    </div>
+    <p class="small">Для запитання з кількома варіантами відповідь зараховується, якщо вибрано всі правильні варіанти й не вибрано жодного неправильного.</p>
+  </section>
+</div>
+
+<script>
+(function () {
+  const quiz = document.getElementById('quiz');
+  const questions = Array.from(document.querySelectorAll('.question'));
+  const answeredEl = document.getElementById('answered');
+  const progressEl = document.getElementById('progress');
+  const checkBtn = document.getElementById('checkBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  let submitted = false;
+
+  function selectedValues(section) {
+    return Array.from(section.querySelectorAll('input:checked')).map(input => input.value).sort();
+  }
+  function correctValues(section) {
+    return section.dataset.correct.split(',').sort();
+  }
+  function sameArray(a, b) {
+    return a.length === b.length && a.every((value, index) => value === b[index]);
+  }
+  function updateProgress() {
+    const answered = questions.filter(section => section.querySelector('input:checked')).length;
+    answeredEl.textContent = answered;
+    progressEl.style.width = (answered / questions.length * 100) + '%';
+  }
+
+  quiz.addEventListener('change', updateProgress);
+
+  checkBtn.addEventListener('click', function () {
+    if (submitted) return;
+    let correctCount = 0;
+    let answeredCount = 0;
+
+    questions.forEach(section => {
+      const chosen = selectedValues(section);
+      const correct = correctValues(section);
+      const isCorrect = sameArray(chosen, correct);
+      if (chosen.length) answeredCount++;
+      if (isCorrect) correctCount++;
+
+      const options = Array.from(section.querySelectorAll('.option'));
+      options.forEach(option => {
+        option.classList.remove('correct', 'wrong');
+        const input = option.querySelector('input');
+        if (correct.includes(input.value)) option.classList.add('correct');
+        else if (input.checked) option.classList.add('wrong');
+        input.disabled = true;
+      });
+
+      const feedback = section.querySelector('.feedback');
+      feedback.hidden = false;
+      feedback.className = 'feedback ' + (isCorrect ? 'good' : 'bad');
+      if (isCorrect) {
+        feedback.textContent = 'Правильно!';
+      } else if (!chosen.length) {
+        feedback.textContent = 'Відповідь не вибрано. Правильний варіант позначено зеленим.';
+      } else {
+        feedback.textContent = 'Не зовсім правильно. Переглянь зеленим позначені правильні варіанти.';
+      }
+    });
+
+    const percent = Math.round(correctCount / questions.length * 100);
+    document.getElementById('percent').textContent = percent + '%';
+    document.getElementById('correctCount').textContent = correctCount;
+    let message;
+    if (percent === 100) message = 'Чудово! Усі відповіді правильні.';
+    else if (percent >= 80) message = 'Відмінний результат! Ти добре знаєш тему.';
+    else if (percent >= 60) message = 'Непогано! Повтори кілька моментів і спробуй ще раз.';
+    else message = 'Варто ще раз повторити сортування та фільтрацію в Excel.';
+    document.getElementById('resultText').textContent =
+      message + ' Відповіді надано: ' + answeredCount + ' із ' + questions.length + '.';
+    document.getElementById('result').style.display = 'block';
+    document.getElementById('result').scrollIntoView({behavior:'smooth', block:'center'});
+    submitted = true;
+    checkBtn.disabled = true;
+  });
+
+  resetBtn.addEventListener('click', function () {
+    quiz.reset();
+    submitted = false;
+    checkBtn.disabled = false;
+    questions.forEach(section => {
+      section.querySelectorAll('input').forEach(input => {
+        input.disabled = false;
+      });
+      section.querySelectorAll('.option').forEach(option => option.classList.remove('correct', 'wrong'));
+      const feedback = section.querySelector('.feedback');
+      feedback.hidden = true;
+      feedback.textContent = '';
+      feedback.className = 'feedback';
+    });
+    document.getElementById('result').style.display = 'none';
+    updateProgress();
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+
+  updateProgress();
+})();
+</script>
+</body>
+</html>
